@@ -1,7 +1,7 @@
 import { loginUserApi, logoutApi, registerUserApi, TLoginData, TRegisterData, updateUserApi } from '@api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
-import { clearTokens, storeTokens } from '../../../utils/auth';
+import { clearTokens, storeTokens } from '../../utils/auth';
 
 type TUserState = {
   user: TUser;

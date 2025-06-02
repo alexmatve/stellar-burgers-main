@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, SerializedError, PayloadAction } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
-import { getOrderByNumberApi, getOrdersApi, orderBurgerApi } from '../../../utils/burger-api'; // ты можешь адаптировать путь
-import { RootState } from '../../store/index';
+import { getOrderByNumberApi, getOrdersApi, orderBurgerApi } from '../../utils/burger-api'; // ты можешь адаптировать путь
+import { RootState } from '../store/index';
 
 type TOrdersState = {
   isOrderLoading: boolean;
