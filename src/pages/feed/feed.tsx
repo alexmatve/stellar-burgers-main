@@ -18,7 +18,7 @@ export const Feed: FC = () => {
   const handleGetFeeds = () => {
     dispatch(fetchFeeds());
   };
-  console.log(orders);
+  // console.log(orders);
 
   // if (isLoading) {
   //   // return <h1>Заказов нет</h1>;

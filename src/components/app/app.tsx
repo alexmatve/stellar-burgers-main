@@ -3,6 +3,7 @@ import '../../index.css';
 import styles from './app.module.css';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
+import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 
 
 
@@ -24,12 +25,12 @@ const App = () => {
       <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage/>} />
         <Route path='/feed' element={<Feed/>} />
-        <Route path='/login' element={<Login/>} />
-        <Route path='/register' element={<Register/>} />
-        <Route path='/forgot-password' element={<ForgotPassword/>} />
-        <Route path='/reset-password' element={<ResetPassword/>} />
-        <Route path='/profile' element={<Profile/>} />
-        <Route path='/profile/orders' element={<ProfileOrders/>} />
+        <Route path='/login' element={<ProtectedRoute onlyUnAuth><Login/></ProtectedRoute>} />
+        <Route path='/register' element={<ProtectedRoute onlyUnAuth><Register/></ProtectedRoute>} />
+        <Route path='/forgot-password' element={<ProtectedRoute onlyUnAuth><ForgotPassword/></ProtectedRoute>} />
+        <Route path='/reset-password' element={<ProtectedRoute onlyUnAuth><ResetPassword/></ProtectedRoute>} />
+        <Route path='/profile' element={<ProtectedRoute><Profile/></ProtectedRoute>} />
+        <Route path='/profile/orders' element={<ProtectedRoute ><ProfileOrders/></ProtectedRoute>} />
         <Route path='*' element={<NotFound404/>} />
       </Routes>
 
@@ -54,11 +55,11 @@ const App = () => {
           {<Route
             path="/profile/orders/:number"
             element={
-              // <ProtectedRout onlyUnAuth={false}>
+              <ProtectedRoute>
                 <Modal onClose={handleModalClose} title='Информация о заказе пользователя'>
                   <OrderInfo />
                 </Modal>
-              // </ProtectedRoute>
+              </ProtectedRoute>
             }
           />}
         </Routes>
