@@ -35,3 +35,26 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('addIngredientByName', (name: string) => {
+  cy.contains(name)
+    .parent()
+    .within(() => {
+      cy.contains('Добавить').click();
+    });
+});
+
+// Расширение типов для TypeScript
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Добавляет ингредиент по имени
+       * @example cy.addIngredientByName('Флюоресцентная булка R2-D3')
+       */
+      addIngredientByName(name: string): Chainable<void>;
+    }
+  }
+}
+
+export {};

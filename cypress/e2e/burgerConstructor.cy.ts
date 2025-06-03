@@ -1,15 +1,13 @@
 import * as orderData from '../fixtures/order.json';
-const API_URL = Cypress.env('BURGER_API_URL');
 
 describe('Burger Constructor', () => {
   beforeEach(() => {
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' }).as('getIngredients');
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
     cy.wait('@getIngredients');
   });
 
   it('должен загрузить и отобразить ингредиенты', () => {
-    // cy.wait('@getIngredients'); // дождемся запроса
     cy.contains('Булки').should('exist');
     cy.contains('Флюоресцентная булка R2-D3').should('exist');
     cy.contains('Кристаллы марсианских альфа-сахаридов').should('exist');
@@ -17,78 +15,49 @@ describe('Burger Constructor', () => {
   });
 
   it('должен добавить булки и ингредиент в конструктор', () => {
-    // Добавляем булку
-    cy.contains('Флюоресцентная булка R2-D3')
-      .parent()
-      .within(() => {
-        cy.contains('Добавить').click();
-      });
-
-    // Проверяем наличие булки в конструкторе
+    cy.addIngredientByName('Флюоресцентная булка R2-D3');
     cy.contains('Флюоресцентная булка R2-D3 (верх)').should('exist');
     cy.contains('Флюоресцентная булка R2-D3 (низ)').should('exist');
 
-    // Добавляем начинку
-    cy.contains('Кристаллы марсианских альфа-сахаридов')
-      .parent()
-      .within(() => {
-        cy.contains('Добавить').click();
-      });
-
-    // Проверяем наличие начинки в конструкторе
+    cy.addIngredientByName('Кристаллы марсианских альфа-сахаридов');
     cy.get('.constructor-element').contains('Кристаллы марсианских альфа-сахаридов').should('exist');
   });
 
-  it('проверка открытия и закрытия модального окна ингридиента', () => {
-    // нажимаем на ингридиент
-    const ingredient = cy.contains('Флюоресцентная булка R2-D3');
-    ingredient.click();
+  it('проверка открытия и закрытия модального окна ингредиента', () => {
+    cy.contains('Флюоресцентная булка R2-D3').as('ingredient');
+    cy.get('@ingredient').click();
 
-    // находим модальное окно
-    cy.get(`[data-test=modal]`);
-    // закрываем
-    cy.get(`[data-test=close_modal_btn]`).click();
+    cy.get('[data-test=modal]').should('exist');
+    cy.get('[data-test=close_modal_btn]').click();
+    cy.get('[data-test=modal]').should('not.exist');
   });
 
-  describe("Проверка оформления заказа", () => {
-
+  describe('Проверка оформления заказа', () => {
     beforeEach(() => {
-        cy.setCookie('accessToken', 'TEST_ACCESS_TOKEN');
-        localStorage.setItem('refreshToken', 'TEST_REFRESH_TOKEN');
+      cy.setCookie('accessToken', 'TEST_ACCESS_TOKEN');
+      localStorage.setItem('refreshToken', 'TEST_REFRESH_TOKEN');
 
-        cy.intercept('GET', 'api/auth/user', { fixture: 'user' });
-        cy.intercept('POST', 'api/orders', { fixture: 'order' });
-        cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients' });
-        cy.visit('http://localhost:4000');
-        // cy.wait('@getUser');
+      cy.intercept('GET', 'api/auth/user', { fixture: 'user' }).as('getUser');
+      cy.intercept('POST', 'api/orders', { fixture: 'order' }).as('postOrder');
+      cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients' }).as('getIngredients');
+
+      cy.visit('/');
     });
 
-    it("Процедура оформления заказа", () => {
-    // Добавляем ингредиенты
-        cy.contains('Флюоресцентная булка R2-D3').parent().within(() => {
-            cy.contains('Добавить').click();
-        });
-        cy.contains('Кристаллы марсианских альфа-сахаридов').parent().within(() => {
-            cy.contains('Добавить').click();
-        });
+    it('процедура оформления заказа', () => {
+      cy.addIngredientByName('Флюоресцентная булка R2-D3');
+      cy.addIngredientByName('Кристаллы марсианских альфа-сахаридов');
 
-        cy.get(`[data-test=button-builder]`).click();
-        
-        cy.get(`[data-test=modal]`).contains(orderData.order.number);
+      cy.get('[data-test=button-builder]').click();
+      cy.get('[data-test=modal]').contains(orderData.order.number);
+      cy.get('[data-test=close_modal_btn]').click();
 
-        cy.get(`[data-test=close_modal_btn]`).click();
-
-        // Проверям пустой ли конструктор, смотря на кнопку заказа (если ингридиентов нет, то она отключена)
-        cy.get(`[data-test=button-builder]`).should('be.disabled');
+      cy.get('[data-test=button-builder]').should('be.disabled');
     });
-        
-
 
     afterEach(() => {
-      // Очистка токенов
-        cy.clearAllCookies();
-        cy.clearAllLocalStorage();
+      cy.clearAllCookies();
+      cy.clearAllLocalStorage();
     });
-
-  })
+  });
 });
