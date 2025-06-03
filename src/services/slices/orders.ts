@@ -33,6 +33,7 @@ export const createOrder = createAsyncThunk<
   async (ingredients, { rejectWithValue }) => {
     try {
       const response = await orderBurgerApi(ingredients); // должен вернуть { order: TOrder }
+      console.log(response);
       return { order: response.order, name: response.name };
     } catch (error: any) {
       return rejectWithValue(error.message || 'Ошибка при создании заказа');
@@ -44,7 +45,6 @@ export const fetchOrder = createAsyncThunk<TOrder, number>(
   'orders/fetchOrder',
   async (data, { rejectWithValue }) => {
     const response = await getOrderByNumberApi(data);
-
     if (!response?.success) {
       return rejectWithValue(response);
     }
@@ -97,6 +97,7 @@ const ordersSlice = createSlice({
       .addCase(createOrder.fulfilled, (state, action) => {
         state.orderRequest = false;
         state.orderModalData = action.payload.order;
+        
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.orderRequest = false;

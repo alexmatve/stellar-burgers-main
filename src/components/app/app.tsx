@@ -4,6 +4,9 @@ import styles from './app.module.css';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
+import { useDispatch, useSelector } from '../../services/store/index';
+import { useEffect } from 'react';
+import { fetchUser } from '@slices';
 
 
 
@@ -11,12 +14,17 @@ import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const background = location.state?.background;
 
   const handleModalClose = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
 
 
   return (

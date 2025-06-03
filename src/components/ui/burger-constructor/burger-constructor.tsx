@@ -88,6 +88,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         disabled={
           !constructorItems.bun || constructorItems.ingredients.length === 0
         }
+        data-test='button-builder'
       />
     </div>
 
