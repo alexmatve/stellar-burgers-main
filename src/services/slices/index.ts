@@ -15,7 +15,8 @@ export {
   loginUser,
   logoutUser,
   updateUser,
-  initialState as userInitialState
+  initialState as userInitialState,
+  fetchUser
 } from './user';
 
 export {

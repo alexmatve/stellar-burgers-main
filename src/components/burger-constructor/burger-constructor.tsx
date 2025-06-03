@@ -3,7 +3,7 @@ import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store/index';
 import { useNavigate } from 'react-router-dom';
-import { createOrder, moveIngredient, resetOrderModalData } from '@slices';
+import { createOrder, moveIngredient, resetConstructor, resetOrderModalData } from '@slices';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
@@ -29,6 +29,7 @@ export const BurgerConstructor: FC = () => {
     ];
 
     dispatch(createOrder(data));
+    dispatch(resetConstructor());
   };
 
   const closeOrderModal = () => {

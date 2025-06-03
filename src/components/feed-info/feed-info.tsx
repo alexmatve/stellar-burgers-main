@@ -28,7 +28,7 @@ export const FeedInfo: FC = () => {
 
   // if (isLoading) return <p>Загрузка...</p>;
   // if (error) return <p>Ошибка: {error}</p>;
-  console.log(total, totalToday, "Feed Info");
+  // console.log(total, totalToday, "Feed Info");
 
   return (
     <FeedInfoUI

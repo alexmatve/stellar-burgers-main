@@ -17,7 +17,7 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
   );
 
 
-  console.log(ingredients, "items Order Card");
+  // console.log(ingredients, "items Order Card");
 
 
   const orderInfo = useMemo(() => {
@@ -52,7 +52,7 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
     };
   }, [order, ingredients]);
 
-  console.log(orderInfo, "OrderCard");
+  // console.log(orderInfo, "OrderCard");
 
   if (!orderInfo) return null;
 

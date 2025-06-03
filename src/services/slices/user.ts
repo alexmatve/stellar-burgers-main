@@ -1,7 +1,7 @@
-import { loginUserApi, logoutApi, registerUserApi, TLoginData, TRegisterData, updateUserApi } from '@api';
+import { getUserApi, loginUserApi, logoutApi, registerUserApi, TLoginData, TRegisterData, updateUserApi } from '@api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
-import { clearTokens, storeTokens } from '../../../utils/auth';
+import { clearTokens, storeTokens } from '../../utils/auth';
 
 type TUserState = {
   user: TUser;
@@ -80,7 +80,16 @@ const userSlice = createSlice({
           email: '',
           name: ''
         };
-      });
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.isAuthenticated = true;
+        state.user = action.payload;
+      })
+      // .addCase(fetchUser.rejected, (state) => {
+      // })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+      });;
   }
 });
 
@@ -97,11 +106,24 @@ export const registerUser = createAsyncThunk<
   }
 });
 
+export const fetchUser = createAsyncThunk(
+  'user/fetch',
+  async (_, { rejectWithValue }) => {
+    const response = await getUserApi();
+    console.log(response);
+    if (!response?.success) {
+      return rejectWithValue(response);
+    }
+
+    return response.user;
+  }
+);
 
 export const loginUser = createAsyncThunk<TUser, TLoginData>(
   'user/login',
   async (data, { rejectWithValue }) => {
-    const response = await loginUserApi(data);
+    const response = await loginUserApi(data);  
+    console.log(response);
 
     if (!response?.success) {
       return rejectWithValue(response);
